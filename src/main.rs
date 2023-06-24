@@ -6,19 +6,23 @@
 fn main() -> eframe::Result<()> {
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
+    yava::setup_audio();
+
     let native_options = eframe::NativeOptions::default();
     eframe::run_native(
         "eframe template",
         native_options,
-        Box::new(|cc| Box::new(eframe_template::TemplateApp::new(cc))),
+        Box::new(|cc| Box::new(yava::TemplateApp::new(cc))),
     )
 }
 
 // When compiling to web using trunk:
 #[cfg(target_arch = "wasm32")]
 fn main() {
+    console_error_panic_hook::set_once();
     // Redirect `log` message to `console.log` and friends:
     eframe::WebLogger::init(log::LevelFilter::Debug).ok();
+    yava::setup_audio();
 
     let web_options = eframe::WebOptions::default();
 
@@ -27,7 +31,7 @@ fn main() {
             .start(
                 "the_canvas_id", // hardcode it
                 web_options,
-                Box::new(|cc| Box::new(eframe_template::TemplateApp::new(cc))),
+                Box::new(|cc| Box::new(yava::TemplateApp::new(cc))),
             )
             .await
             .expect("failed to start eframe");
